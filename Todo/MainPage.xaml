@@ -19,10 +19,20 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <HorizontalStackLayout>
-                <Entry AutomationId="NewTodoName" Text="{Binding NewToDoName}" HorizontalOptions="StartAndExpand"/>
-                <Button AutomationId="AddTodoButton" Text="Neu" Command="{Binding AddTodoCommand}" />
-            </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="10">
+                <Entry Grid.Column="0"
+                       VerticalOptions="Center"
+                       Placeholder="Enter text..."
+                       AutomationId="NewTodoName"
+                       Text="{Binding NewToDoName}"/>
+                <Button Grid.Column="1" 
+                        HorizontalOptions="Start" 
+                        VerticalOptions="Center" 
+                        AutomationId="AddTodoButton" 
+                        Text="Neu" 
+                        Command="{Binding AddTodoCommand}" />
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 
