@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Todo.Gateways;
 using Todo.ViewModels;
+using Todo.Views;
 
 namespace Todo;
 
@@ -18,7 +19,6 @@ public static class MauiProgram
 			});
 
         builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddSingleton<HttpClient>();
         builder.Services.AddSingleton<MainPageViewModel>();
         builder.Services.AddSingleton<ITodoService, TodoService>();
 

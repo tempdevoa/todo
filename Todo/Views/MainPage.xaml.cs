@@ -1,6 +1,6 @@
 ﻿using Todo.ViewModels;
 
-namespace Todo;
+namespace Todo.Views;
 
 public partial class MainPage : ContentPage
 {

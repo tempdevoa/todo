@@ -3,13 +3,13 @@
     x:Class="Todo.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Todo"
+    xmlns:views="clr-namespace:Todo.Views"
     Shell.FlyoutBehavior="Flyout"
     Title="Todo">
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
 
 </Shell>
