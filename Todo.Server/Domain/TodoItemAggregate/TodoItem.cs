@@ -1,14 +1,14 @@
-﻿namespace Todo.Server.Domain
+﻿namespace Todo.Server.Domain.TodoItemAggregate
 {
-    public class TodoTask
+    public class TodoItem
     {
         public string Id { get; }
 
         public string Title { get; }
-
+              
         public bool IsCompleted { get; private set; }
 
-        public TodoTask(string id, string title, bool isCompleted)
+        public TodoItem(string id, string title, bool isCompleted)
         {
             Id = id;
             Title = title;

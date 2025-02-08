@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Todo.Server.Domain;
+using Todo.Server.Domain.TodoItemAggregate;
 
 namespace Todo.Server.Controllers;
 
@@ -7,23 +7,23 @@ namespace Todo.Server.Controllers;
 [Route("[controller]")]
 public class TodoController : ControllerBase
 {
-    private static readonly List<TodoTask> todos;
+    private static readonly List<TodoItem> todos;
 
     static TodoController()
     {
-        todos = new List<TodoTask>();
-        todos.Add(new TodoTask("projekt_anlegen", "Projekt anlegen", true));
-        todos.Add(new TodoTask("durchstich_implementieren", "Durchstich implementieren", false));
+        todos = new List<TodoItem>();
+        todos.Add(new TodoItem("projekt_anlegen", "Projekt anlegen", true));
+        todos.Add(new TodoItem("durchstich_implementieren", "Durchstich implementieren", false));
     }
 
     [HttpGet(Name = "GetAllTodos")]
-    public IEnumerable<TodoTask> Get()
+    public IEnumerable<TodoItem> Get()
     {
         return todos;
     }
 
     [HttpPost(Name = "AddTodo")]
-    public TodoTask Add(TodoTask newTodoTask)
+    public TodoItem Add(TodoItem newTodoTask)
     {
         todos.Add(newTodoTask);
         return newTodoTask;
