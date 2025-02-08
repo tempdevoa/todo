@@ -25,6 +25,7 @@
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
 
             <Button
+                AutomationId="Clicker"
                 x:Name="CounterBtn"
                 Text="Click me" 
                 SemanticProperties.Hint="Counts the number of times you click"
