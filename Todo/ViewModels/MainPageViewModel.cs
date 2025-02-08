@@ -9,9 +9,7 @@ namespace Todo.ViewModels
         private readonly ITodoService todoService;
 
         private string newToDoName;
-
-        public Command LoadTodosCommand { get; }
-
+                
         public Command AddTodoCommand { get; }
                 
         public string NewToDoName
@@ -27,34 +25,43 @@ namespace Todo.ViewModels
             this.todoService = todoService;
             AddTodoCommand = new Command(async () => await AddTodoAsync());
 
-            LoadTodosAsync();
+            _ = LoadTodosAsync();
         }
 
         private async Task LoadTodosAsync()
         {
+            IsBusy = true;
             var todos = await todoService.GetAllAsync();
             Todos.Clear();
             foreach (var todo in todos)
             {
                 Todos.Add(todo);
             }
+            IsBusy = false;
         }
 
         private async Task AddTodoAsync()
         {
+            IsBusy = true;
             var id = NewToDoName.Trim().ToLowerInvariant().Replace(" ", "_");
             var newTodo = new TodoTask(id, NewToDoName, false);
             Todos.Add(newTodo);
             NewToDoName = string.Empty;
             await todoService.AddAsync(newTodo);
             await LoadTodosAsync();
+            IsBusy = false;
         }
 
-        private async Task ToggleTodoAsync(TodoTask todo)
+        public async Task CompleteTodo(string todoId)
         {
-            //todo.IsCompleted = !todo.IsCompleted;
-            await todoService.CompleteAsync(todo);
-            await LoadTodosAsync();
+            IsBusy = true;
+            var foundTodo = Todos.FirstOrDefault(p => p.Id.Equals(todoId));
+            if(!string.IsNullOrEmpty(foundTodo.Id))
+            {
+                await todoService.CompleteAsync(foundTodo);
+                await LoadTodosAsync();
+            }
+            IsBusy = false;
         }
     }
 }

@@ -56,4 +56,33 @@ public class AcceptanceTests
         newTodoListviewItem = driver.FindElement(By.Id(newTodoTaskId));
         Assert.That(newTodoListviewItem, Is.Not.Null, "Das neue Todo wurde nach neustart der App nicht gefunden und vertmutlich nicht persistiert.");
     }
+
+    [Test]
+    public void CompleteNewTodo()
+    {
+        driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        var newTodoTaskName = $"Akzeptanztest {Guid.NewGuid().ToString("N")}";
+        var newTodoTaskId = newTodoTaskName.ToLower().Replace(" ", "_");
+        var newTodoNameEntry = driver.FindElement(By.Id("NewTodoName"));
+        newTodoNameEntry.SendKeys(newTodoTaskName);
+
+        var addTodoButton = driver.FindElement(By.Id("AddTodoButton"));
+        addTodoButton.Click();
+
+        var newTodoTaskCheckboxId = $"{newTodoTaskId}checkbox";
+        var newTodoCheckbox = driver.FindElement(By.Id(newTodoTaskCheckboxId));
+        var isChecked = Convert.ToBoolean(newTodoCheckbox.GetAttribute("checked"));
+        Assert.That(isChecked, Is.False, "Das Todo sollte noch nicht abgeschlossen sein.");
+        newTodoCheckbox.Click();
+                
+        isChecked = Convert.ToBoolean(newTodoCheckbox.GetAttribute("checked"));
+        Assert.That(isChecked, Is.True, "Das Todo sollte abgeschlossen sein.");
+
+        driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        newTodoCheckbox = driver.FindElement(By.Id(newTodoTaskCheckboxId));
+        isChecked = Convert.ToBoolean(newTodoCheckbox.GetAttribute("checked"));
+        Assert.That(isChecked, Is.True, "Das Todo sollte abgeschlossen sein.");
+    }
 }

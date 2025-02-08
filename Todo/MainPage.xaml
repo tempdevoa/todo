@@ -12,7 +12,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" AutomationId="{Binding Id}">
-                                <CheckBox IsChecked="{Binding IsCompleted}" />
+                                <CheckBox AutomationId="{Binding Path=Id, StringFormat='{0}checkbox'}" IsChecked="{Binding IsCompleted}" CheckedChanged="OnCheckBoxCheckedChanged" />
                                 <Label Text="{Binding Title}" VerticalOptions="Center" />
                             </StackLayout>
                         </ViewCell>

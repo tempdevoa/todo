@@ -28,4 +28,11 @@ public class TodoController : ControllerBase
         todos.Add(newTodoTask);
         return newTodoTask;
     }
+
+    [HttpPost("{id}", Name = "CompleteTodo")]
+    public void Complete(string id)
+    {
+        var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
+        foundTodo?.Complete();
+    }
 }

@@ -52,7 +52,7 @@ namespace Todo.Gateways
 
         public async Task CompleteAsync(TodoTask todo)
         {
-            await httpClient.PutAsJsonAsync($"{uri}/{todo.Id}", todo);
+            await httpClient.PostAsync($"{uri}/{todo.Id}", null);
         }
     }
 }

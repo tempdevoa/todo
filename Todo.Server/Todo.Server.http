@@ -9,3 +9,8 @@ GET {{Todo.Server_HostAddress}}/todo/
 Accept: application/jsonTodo
 
 ###
+
+POST {{Todo.Server_HostAddress}}/todo/asbda
+Accept: application/jsonTodo
+
+###

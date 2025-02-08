@@ -4,11 +4,23 @@ namespace Todo;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+    private readonly MainPageViewModel viewModel;
 
 	public MainPage(MainPageViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+        this.viewModel = viewModel;
+    }
+
+    private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        bool isChecked = e.Value;
+        if (isChecked && viewModel.IsNotBusy)
+        {
+            var idOfCheckbox = (sender as CheckBox).AutomationId;
+            var idOfTodo = idOfCheckbox.Remove(idOfCheckbox.Length - 8);
+            await viewModel.CompleteTodo(idOfTodo);
+        }
     }
 }
