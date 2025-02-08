@@ -36,17 +36,17 @@ public class AcceptanceTests
     }
 
     [Test]
-    public void AppShouldOpenAndCounterButtonShouldBeClickedTwoTimes()
+    public void AddNewTodo()
     {
         driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        var newTodoNameEntry = driver.FindElement(By.Id("NewTodoName"));
+        var addTodoButton = driver.FindElement(By.Id("AddTodoButton"));
+
+        newTodoNameEntry.SendKeys("Neues ToDo 123");
+        addTodoButton.Click();
         
-        var clickedButton = driver.FindElement(By.Id("Clicker"));
-        Assert.That(clickedButton.Text, Does.Contain("Click me"));
-
-        clickedButton.Click();
-        Assert.That(clickedButton.Text, Does.Contain("Clicked 1 time"));
-
-        clickedButton.Click();
-        Assert.That(clickedButton.Text, Does.Contain("Clicked 2 times"));
+        var newTodoListviewItem = driver.FindElement(By.Id("neues_todo_123"));
+        Assert.That(newTodoListviewItem, Is.Not.Null);
     }
 }

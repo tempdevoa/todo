@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Todo.Gateways;
+using Todo.ViewModels;
 
 namespace Todo;
 
@@ -15,10 +17,13 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-		builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddSingleton<MainPageViewModel>();
+        builder.Services.AddSingleton<ITodoService, TodoService>();
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
 		return builder.Build();
