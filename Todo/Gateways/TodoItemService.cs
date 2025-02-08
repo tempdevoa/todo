@@ -51,6 +51,15 @@ namespace Todo.Gateways
             catch (Exception) { }
         }
 
+        public async Task DeleteAsync(TodoItem todo)
+        {
+            try
+            {
+                await httpClient.DeleteAsync($"{uri}/{todo.Id}");
+            }
+            catch (Exception) { }
+        }
+
         public async Task CompleteAsync(TodoItem todo)
         {
             try

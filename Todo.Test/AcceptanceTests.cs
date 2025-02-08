@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Appium.Interfaces;
 
 namespace Todo.AcceptanceTests;
 
@@ -84,5 +85,36 @@ public class AcceptanceTests
         newTodoCheckbox = driver.FindElement(By.Id(newTodoTaskCheckboxId));
         isChecked = Convert.ToBoolean(newTodoCheckbox.GetAttribute("checked"));
         Assert.That(isChecked, Is.True, "Das Todo sollte abgeschlossen sein.");
+    }
+
+    [Test]
+    public void DeleteNewTodo()
+    {
+        driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        var newTodoTaskName = $"Akzeptanztest {Guid.NewGuid().ToString("N")}";
+        var newTodoTaskId = newTodoTaskName.ToLower().Replace(" ", "_");
+        var newTodoNameEntry = driver.FindElement(By.Id("NewTodoName"));
+        newTodoNameEntry.SendKeys(newTodoTaskName);
+
+        var addTodoButton = driver.FindElement(By.Id("AddTodoButton"));
+        addTodoButton.Click();
+
+        var newTodoListviewItem = driver.FindElement(By.Id(newTodoTaskId));
+        Assert.That(newTodoListviewItem, Is.Not.Null, "Das neue Todo wurde nicht gefunden.");
+
+        driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        newTodoListviewItem = driver.FindElement(By.Id(newTodoTaskId));
+        Assert.That(newTodoListviewItem, Is.Not.Null, "Das neue Todo wurde nach neustart der App nicht gefunden und vertmutlich nicht persistiert.");
+
+        driver.ExecuteScript("mobile: swipeGesture", new Dictionary<string, object>()
+        {
+            { "elementId", newTodoListviewItem.Id },
+            { "direction", "right" },
+            { "percent", "1" }
+        });
+
+        Assert.Throws<NoSuchElementException>(() => driver.FindElement(By.Id(newTodoTaskId)), "Das neue Todo wurde nach neustart der App gefunden und dementsprechend nicht gelöscht.");
     }
 }

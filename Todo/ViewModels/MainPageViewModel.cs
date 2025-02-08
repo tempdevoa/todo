@@ -17,12 +17,18 @@ namespace Todo.ViewModels
 
         public Command AddTodoCommand { get; }
 
+        public Command DeleteTodoCommand { get; }
+
+        public Command CompleteTodoCommand { get; }
+
         public ObservableCollection<TodoItem> Todos { get; } = new ObservableCollection<TodoItem>();
 
         public MainPageViewModel(ITodoItemService todoService)
         {
             this.todoItemService = todoService;
             AddTodoCommand = new Command(async () => await AddTodoAsync());
+            DeleteTodoCommand = new Command<TodoItem>(async (todoItem) => await DeleteTodoAsync(todoItem.Id));
+            CompleteTodoCommand = new Command<TodoItem>(async (todoItem) => await CompleteTodoAsync(todoItem.Id));
 
             _ = LoadTodosAsync();
         }
@@ -52,11 +58,22 @@ namespace Todo.ViewModels
             Todos.Add(newTodo);
             NewToDoName = string.Empty;
             await todoItemService.AddAsync(newTodo);
-            await LoadTodosAsync();
             IsBusy = false;
         }
 
-        public async Task CompleteTodo(string todoId)
+        private async Task DeleteTodoAsync(string todoId)
+        {
+            IsBusy = true;
+            var foundTodo = Todos.FirstOrDefault(p => p.Id.Equals(todoId));
+            if (!string.IsNullOrEmpty(foundTodo.Id))
+            {
+                Todos.Remove(foundTodo);
+                await todoItemService.DeleteAsync(foundTodo);
+            }
+            IsBusy = false;
+        }
+
+        public async Task CompleteTodoAsync(string todoId)
         {
             IsBusy = true;
             var foundTodo = Todos.FirstOrDefault(p => p.Id.Equals(todoId));

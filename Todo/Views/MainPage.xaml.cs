@@ -20,7 +20,7 @@ public partial class MainPage : ContentPage
         {
             var idOfCheckbox = (sender as CheckBox).AutomationId;
             var idOfTodo = idOfCheckbox.Remove(idOfCheckbox.Length - 8);
-            await viewModel.CompleteTodo(idOfTodo);
+            await viewModel.CompleteTodoAsync(idOfTodo);
         }
     }
 }

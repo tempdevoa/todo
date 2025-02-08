@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Todo.Views.MainPage">
+             x:Class="Todo.Views.MainPage"
+             xmlns:viewmodels="clr-namespace:Todo.ViewModels">
 
     <ScrollView>
         <VerticalStackLayout
@@ -11,10 +12,31 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" AutomationId="{Binding Id}">
-                                <CheckBox AutomationId="{Binding Path=Id, StringFormat='{0}checkbox'}" IsChecked="{Binding IsCompleted}" CheckedChanged="OnCheckBoxCheckedChanged" />
-                                <Label Text="{Binding Title}" VerticalOptions="Center" />
-                            </StackLayout>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="Delete"
+                                                   BackgroundColor="Red"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainPageViewModel}}, Path=DeleteTodoCommand}"
+                                                   CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="Done"
+                                                   BackgroundColor="Green"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainPageViewModel}}, Path=CompleteTodoCommand}"
+                                                   CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <StackLayout Orientation="Horizontal" AutomationId="{Binding Id}">
+                                    <CheckBox AutomationId="{Binding Path=Id, StringFormat='{0}checkbox'}" 
+                                              IsEnabled="{Binding CanBeCompleted}"
+                                              IsChecked="{Binding IsCompleted}" 
+                                              CheckedChanged="OnCheckBoxCheckedChanged" />
+                                    <Label Text="{Binding Title}" VerticalOptions="Center" />
+                                </StackLayout>
+                            </SwipeView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -23,7 +45,7 @@
                   ColumnSpacing="10">
                 <Entry Grid.Column="0"
                        VerticalOptions="Center"
-                       Placeholder="Enter text..."
+                       Placeholder="Neues ToDo..."
                        AutomationId="NewTodoName"
                        Text="{Binding NewToDoName}"/>
                 <Button Grid.Column="1" 

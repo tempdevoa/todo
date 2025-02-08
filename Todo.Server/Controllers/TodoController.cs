@@ -35,4 +35,14 @@ public class TodoController : ControllerBase
         var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
         foundTodo?.Complete();
     }
+
+    [HttpDelete("{id}", Name = "DeleteTodo")]
+    public void Delete(string id)
+    {
+        var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
+        if(foundTodo != null)
+        {
+            todos.Remove(foundTodo);
+        }
+    }
 }

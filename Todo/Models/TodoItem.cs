@@ -10,6 +10,8 @@ namespace Todo.Models
 
         public bool IsCompleted { get; }
 
+        public bool CanBeCompleted => !IsCompleted;
+
         [JsonConstructor]
         public TodoItem(string id, string title, bool isCompleted)
         {
