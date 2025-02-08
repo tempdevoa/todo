@@ -2,7 +2,6 @@
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Appium.Interfaces;
 
 namespace Todo.AcceptanceTests;
 
