@@ -6,7 +6,7 @@ namespace Todo.ViewModels
 {
     public class MainPageViewModel : BaseViewModel
     {
-        private readonly ITodoService _todoService;
+        private readonly ITodoService todoService;
 
         private string newToDoName;
 
@@ -24,14 +24,15 @@ namespace Todo.ViewModels
 
         public MainPageViewModel(ITodoService todoService)
         {
-            _todoService = todoService;
-            LoadTodosCommand = new Command(async () => await LoadTodosAsync());
+            this.todoService = todoService;
             AddTodoCommand = new Command(async () => await AddTodoAsync());
+
+            LoadTodosAsync();
         }
 
         private async Task LoadTodosAsync()
         {
-            var todos = await _todoService.GetAllAsync();
+            var todos = await todoService.GetAllAsync();
             Todos.Clear();
             foreach (var todo in todos)
             {
@@ -45,14 +46,14 @@ namespace Todo.ViewModels
             var newTodo = new TodoTask(id, NewToDoName, false);
             Todos.Add(newTodo);
             NewToDoName = string.Empty;
-            //await _todoService.AddAsync(newTodo);
-            //await LoadTodosAsync();
+            await todoService.AddAsync(newTodo);
+            await LoadTodosAsync();
         }
 
         private async Task ToggleTodoAsync(TodoTask todo)
         {
             //todo.IsCompleted = !todo.IsCompleted;
-            await _todoService.CompleteAsync(todo);
+            await todoService.CompleteAsync(todo);
             await LoadTodosAsync();
         }
     }

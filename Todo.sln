@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.AcceptanceTests", "Tod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.UnitTests", "Todo.UnitTests\Todo.UnitTests.csproj", "{D2870899-F9AA-4163-B80D-09675ADC6953}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Server", "Todo.Server\Todo.Server.csproj", "{58DCC81C-952C-48E4-A661-2570D7DC3167}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{D2870899-F9AA-4163-B80D-09675ADC6953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2870899-F9AA-4163-B80D-09675ADC6953}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2870899-F9AA-4163-B80D-09675ADC6953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58DCC81C-952C-48E4-A661-2570D7DC3167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DCC81C-952C-48E4-A661-2570D7DC3167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DCC81C-952C-48E4-A661-2570D7DC3167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DCC81C-952C-48E4-A661-2570D7DC3167}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

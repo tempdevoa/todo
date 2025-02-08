@@ -1,8 +1,6 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Todo.Models
+﻿namespace Todo.Server.Domain
 {
-    public struct TodoTask
+    public class TodoTask
     {
         public string Id { get; }
 
@@ -10,7 +8,6 @@ namespace Todo.Models
 
         public bool IsCompleted { get; }
 
-        [JsonConstructor]
         public TodoTask(string id, string title, bool isCompleted)
         {
             Id = id;

@@ -1,0 +1,11 @@
+@Todo.Server_HostAddress = http://192.168.199.1:5152
+
+GET {{Todo.Server_HostAddress}}/weatherforecast/
+Accept: application/jsonTodo
+
+###
+
+GET {{Todo.Server_HostAddress}}/todo/
+Accept: application/jsonTodo
+
+###

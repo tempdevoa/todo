@@ -40,13 +40,20 @@ public class AcceptanceTests
     {
         driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
 
+        var newTodoTaskName = $"Akzeptanztest {Guid.NewGuid().ToString("N")}";
+        var newTodoTaskId = newTodoTaskName.ToLower().Replace(" ", "_");
         var newTodoNameEntry = driver.FindElement(By.Id("NewTodoName"));
-        var addTodoButton = driver.FindElement(By.Id("AddTodoButton"));
+        newTodoNameEntry.SendKeys(newTodoTaskName);
 
-        newTodoNameEntry.SendKeys("Neues ToDo 123");
+        var addTodoButton = driver.FindElement(By.Id("AddTodoButton"));
         addTodoButton.Click();
         
-        var newTodoListviewItem = driver.FindElement(By.Id("neues_todo_123"));
-        Assert.That(newTodoListviewItem, Is.Not.Null);
+        var newTodoListviewItem = driver.FindElement(By.Id(newTodoTaskId));
+        Assert.That(newTodoListviewItem, Is.Not.Null, "Das neue Todo wurde nicht gefunden.");
+
+        driver.StartActivity("com.todo.todoapp", "crc642cfc5ea161b91bf0.MainActivity");
+
+        newTodoListviewItem = driver.FindElement(By.Id(newTodoTaskId));
+        Assert.That(newTodoListviewItem, Is.Not.Null, "Das neue Todo wurde nach neustart der App nicht gefunden und vertmutlich nicht persistiert.");
     }
 }
