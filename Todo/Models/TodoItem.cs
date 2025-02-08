@@ -2,7 +2,7 @@
 
 namespace Todo.Models
 {
-    public struct TodoTask
+    public struct TodoItem
     {
         public string Id { get; }
 
@@ -11,7 +11,7 @@ namespace Todo.Models
         public bool IsCompleted { get; }
 
         [JsonConstructor]
-        public TodoTask(string id, string title, bool isCompleted)
+        public TodoItem(string id, string title, bool isCompleted)
         {
             Id = id;
             Title = title;

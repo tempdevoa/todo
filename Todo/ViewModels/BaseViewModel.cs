@@ -5,18 +5,18 @@ namespace Todo.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        private bool _isBusy;
+        private bool isBusy;
 
         public bool IsBusy
         {
-            get => _isBusy;
+            get => isBusy;
             set
             {
-                if (_isBusy != value)
+                if (isBusy != value)
                 {
-                    _isBusy = value;
+                    isBusy = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsNotBusy)); // Notify change for IsNotBusy as well
+                    OnPropertyChanged(nameof(IsNotBusy));
                 }
             }
         }

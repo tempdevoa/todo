@@ -5,13 +5,13 @@ using System.Net.Http.Headers;
 
 namespace Todo.Gateways
 {
-    public class TodoService : ITodoService
+    public class TodoItemService : ITodoItemService
     {
         private readonly HttpClient httpClient;
         private readonly JsonSerializerOptions _serializerOptions;
         private readonly Uri uri = new Uri(string.Format("http://192.168.199.1:5152/Todo"));
 
-        public TodoService()
+        public TodoItemService()
         {
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -24,35 +24,40 @@ namespace Todo.Gateways
             };
         }
 
-        public async Task<List<TodoTask>> GetAllAsync()
+        public async Task<List<TodoItem>> GetAllAsync()
         {
-            var queriedTodoTasks = new List<TodoTask>();
-                        
+            var queriedTodoTasks = new List<TodoItem>();
+
             try
             {
                 HttpResponseMessage response = await httpClient.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    queriedTodoTasks = JsonSerializer.Deserialize<List<TodoTask>>(content, _serializerOptions);
+                    queriedTodoTasks = JsonSerializer.Deserialize<List<TodoItem>>(content, _serializerOptions);
                 }
             }
-            catch (Exception ex)
+            catch (Exception) { }
+
+            return queriedTodoTasks ?? new List<TodoItem>();
+        }
+
+        public async Task AddAsync(TodoItem todo)
+        {
+            try
             {
-                //Debug.WriteLine(@"\tERROR {0}", ex.Message);
+                await httpClient.PostAsJsonAsync(uri, todo);
             }
-
-            return queriedTodoTasks ?? new List<TodoTask>();
+            catch (Exception) { }
         }
 
-        public async Task AddAsync(TodoTask todo)
+        public async Task CompleteAsync(TodoItem todo)
         {
-            await httpClient.PostAsJsonAsync(uri, todo);
-        }
-
-        public async Task CompleteAsync(TodoTask todo)
-        {
-            await httpClient.PostAsync($"{uri}/{todo.Id}", null);
+            try
+            {
+                await httpClient.PostAsync($"{uri}/{todo.Id}", null);
+            }
+            catch (Exception) { }
         }
     }
 }

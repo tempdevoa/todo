@@ -20,7 +20,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainPageViewModel>();
-        builder.Services.AddSingleton<ITodoService, TodoService>();
+        builder.Services.AddSingleton<ITodoItemService, TodoItemService>();
 
 #if DEBUG
         builder.Logging.AddDebug();
