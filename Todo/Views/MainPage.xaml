@@ -2,12 +2,35 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Todo.Views.MainPage"
-             xmlns:viewmodels="clr-namespace:Todo.ViewModels">
-
+             xmlns:viewmodels="clr-namespace:Todo.ViewModels"
+             xmlns:views="clr-namespace:Todo.Views">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <views:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                    <Entry Placeholder="Neues ToDo..."
+                           AutomationId="NewTodoName"
+                           Text="{Binding NewToDoName}"/>
+                    <Label TextColor="Red"
+                           Text="{Binding ValidationErrorMessage}"
+                           IsVisible="{Binding HasValidationError}"/>
+                </VerticalStackLayout>
+                <Button  Grid.Column="1" 
+                         HorizontalOptions="Start" 
+                         VerticalOptions="Center" 
+                         AutomationId="AddTodoButton" 
+                         Text="Neu"
+                         IsEnabled="{Binding HasValidationError, Converter={StaticResource InverseBooleanConverter}}"
+                         Command="{Binding AddTodoCommand}" />
+            </Grid>
             <ListView AutomationId="ToDoListView" ItemsSource="{Binding Todos}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -31,31 +54,16 @@
                                 </SwipeView.RightItems>
                                 <StackLayout Orientation="Horizontal" AutomationId="{Binding Id}">
                                     <CheckBox AutomationId="{Binding Path=Id, StringFormat='{0}checkbox'}" 
-                                              IsEnabled="{Binding CanBeCompleted}"
+                                              IsEnabled="{Binding IsCompleted, Converter={StaticResource InverseBooleanConverter}}}"
                                               IsChecked="{Binding IsCompleted}" 
                                               CheckedChanged="OnCheckBoxCheckedChanged" />
-                                    <Label Text="{Binding Title}" VerticalOptions="Center" />
+                                    <Label Text="{Binding Title}" VerticalOptions="Center"/>
                                 </StackLayout>
                             </SwipeView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Grid ColumnDefinitions="*,Auto"
-                  ColumnSpacing="10">
-                <Entry Grid.Column="0"
-                       VerticalOptions="Center"
-                       Placeholder="Neues ToDo..."
-                       AutomationId="NewTodoName"
-                       Text="{Binding NewToDoName}"/>
-                <Button Grid.Column="1" 
-                        HorizontalOptions="Start" 
-                        VerticalOptions="Center" 
-                        AutomationId="AddTodoButton" 
-                        Text="Neu" 
-                        Command="{Binding AddTodoCommand}" />
-            </Grid>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

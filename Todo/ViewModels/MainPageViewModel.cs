@@ -8,11 +8,41 @@ namespace Todo.ViewModels
     {
         private readonly ITodoItemService todoItemService;
         private string newToDoName = string.Empty;
-                
+        private string validationErrorMessage = string.Empty;
+        private bool hasValidationError = false;
+        
+        public string ValidationErrorMessage
+        {
+            get { return validationErrorMessage; }
+            set 
+            { 
+                SetProperty(ref validationErrorMessage, value, nameof(ValidationErrorMessage));
+                OnPropertyChanged(nameof(HasValidationError));
+            }
+        }
+
+        public bool HasValidationError => !validationErrorMessage.Equals(string.Empty);
+
         public string NewToDoName
         {
             get { return newToDoName; }
-            set { SetProperty(ref newToDoName, value, nameof(NewToDoName)); }
+            set 
+            { 
+                SetProperty(ref newToDoName, value, nameof(NewToDoName));
+                ValidateNewTodoName();
+            }
+        }
+
+        private void ValidateNewTodoName()
+        {
+            if (newToDoName.Equals(string.Empty))
+            {
+                ValidationErrorMessage = "Der Name darf nicht leer sein.";
+            }
+            else
+            {
+                ValidationErrorMessage = string.Empty;
+            }
         }
 
         public Command AddTodoCommand { get; }
