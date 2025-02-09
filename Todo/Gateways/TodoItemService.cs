@@ -1,52 +1,27 @@
 ﻿using Todo.Models;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Net.Http.Headers;
 
 namespace Todo.Gateways
 {
     public class TodoItemService : ITodoItemService
     {
-        private readonly HttpClient httpClient;
-        private readonly JsonSerializerOptions _serializerOptions;
-        private readonly Uri uri = new Uri(string.Format("http://192.168.199.1:5152/Todo"));
+        private readonly RestClient restClient;
 
         public TodoItemService()
         {
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _serializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true,
-                WriteIndented = true
-            };
+            restClient = new RestClient("Todo");
         }
 
         public async Task<List<TodoItem>> GetAllAsync()
         {
-            var queriedTodoTasks = new List<TodoItem>();
 
-            try
-            {
-                HttpResponseMessage response = await httpClient.GetAsync(uri);
-                if (response.IsSuccessStatusCode)
-                {
-                    string content = await response.Content.ReadAsStringAsync();
-                    queriedTodoTasks = JsonSerializer.Deserialize<List<TodoItem>>(content, _serializerOptions);
-                }
-            }
-            catch (Exception) { }
-
-            return queriedTodoTasks ?? new List<TodoItem>();
+            return await restClient.GetAllAsync<TodoItem>();
         }
 
         public async Task AddAsync(TodoItem todo)
         {
             try
             {
-                await httpClient.PostAsJsonAsync(uri, todo);
+                await restClient.PostAsJsonAsync(todo);
             }
             catch (Exception) { }
         }
@@ -55,7 +30,7 @@ namespace Todo.Gateways
         {
             try
             {
-                await httpClient.DeleteAsync($"{uri}/{todo.Id}");
+                await restClient.DeleteAsync(todo.Id);
             }
             catch (Exception) { }
         }
@@ -64,7 +39,7 @@ namespace Todo.Gateways
         {
             try
             {
-                await httpClient.PutAsJsonAsync($"{uri}/{todo.Id}", todo);
+                await restClient.PutAsJsonAsync(todo.Id, todo);
             }
             catch (Exception) { }
         }
