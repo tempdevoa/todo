@@ -12,7 +12,7 @@ In order to build and test you need to have the following prerequisites:
 4. Build all
 5. Start the appium server in a new CMD or PowerShell using the command "appium"
 6. Start your android device emulator
-7. Run all (the server and the app)
+7. Run the todo.server and app (for example with the "Run All" profile)
 8. Run all the tests
 
 ## License

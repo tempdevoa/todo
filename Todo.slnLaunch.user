@@ -1,6 +1,6 @@
 [
   {
-    "Name": "Neues Profil",
+    "Name": "Run All",
     "Projects": [
       {
         "Path": "Todo\\Todo.csproj",
