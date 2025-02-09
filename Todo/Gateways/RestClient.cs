@@ -7,6 +7,8 @@ namespace Todo.Gateways
 {
     public class RestClient
     {
+        private const string AppServerIPandPort = "192.168.199.1:5152";
+
         private readonly string restResource;
         private readonly HttpClient httpClient;
         private readonly Uri uri;
@@ -16,7 +18,7 @@ namespace Todo.Gateways
         public RestClient(string restResource)
         {
             this.restResource = restResource;
-            uri = new Uri($"http://192.168.199.1:5152/{this.restResource}");
+            uri = new Uri($"http://{AppServerIPandPort}/{this.restResource}");
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

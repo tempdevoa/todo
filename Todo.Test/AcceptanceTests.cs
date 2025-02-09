@@ -1,6 +1,4 @@
 ﻿using OpenQA.Selenium.Appium.Android;
-using OpenQA.Selenium.Appium.Enums;
-using OpenQA.Selenium.Appium;
 using OpenQA.Selenium;
 
 namespace Todo.AcceptanceTests;
@@ -11,21 +9,8 @@ public class AcceptanceTests
 
     [OneTimeSetUp]
     public void SetUp()
-    {
-        var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
-        
-        var appiumOptions = new AppiumOptions
-        {
-            AutomationName = AutomationName.AndroidUIAutomator2,
-            PlatformName = "Android",
-            DeviceName = "Android Emulator"
-        };
-
-        appiumOptions.AddAdditionalAppiumOption("noReset", true);
-        appiumOptions.AddAdditionalAppiumOption("appium:appPackage", "com.todo.todoapp");
-        appiumOptions.AddAdditionalAppiumOption("appium:appWaitActivity", "crc642cfc5ea161b91bf0.MainActivity");
-        
-        driver = new AndroidDriver(serverUri, appiumOptions);
+    {        
+        driver = AppiumDriverFactory.CreateAndriodDriver();
     }
 
     [OneTimeTearDown]
