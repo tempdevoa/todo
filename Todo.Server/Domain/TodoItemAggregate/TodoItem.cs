@@ -12,7 +12,9 @@ namespace Todo.Server.Domain.TodoItemAggregate
         /// <summary>
         /// Only for EF
         /// </summary>
+#pragma warning disable CS8618
         public TodoItem()
+#pragma warning restore CS8618
         {
         }
 

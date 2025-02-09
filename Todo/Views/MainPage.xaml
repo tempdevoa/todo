@@ -4,6 +4,8 @@
              x:Class="Todo.Views.MainPage"
              xmlns:viewmodels="clr-namespace:Todo.ViewModels"
              xmlns:views="clr-namespace:Todo.Views"
+             xmlns:models="clr-namespace:Todo.Models"
+             x:DataType="viewmodels:MainPageViewModel"
              Padding="0,20,0,0">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -37,7 +39,7 @@
             </Grid>
             <ListView AutomationId="ToDoListView" ItemsSource="{Binding Todos}">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:TodoItem">
                         <ViewCell>
                             <SwipeView>
                                 <SwipeView.LeftItems>
