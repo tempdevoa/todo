@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("TestDb"));
 
+builder.Services.AddScoped<IAppDbContext, AppDbContext>();
+builder.Services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 

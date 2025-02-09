@@ -1,23 +1,45 @@
-﻿using Todo.Server.Domain.TodoItemAggregate;
+﻿using Microsoft.EntityFrameworkCore;
+using Todo.Server.Domain.TodoItemAggregate;
 
 namespace Todo.Server.Persistence
 {
-    public interface ITodoItemRepository
+    public class TodoItemRepository : ITodoItemRepository
     {
-        Task FlushAsync();
+        private IAppDbContext appDbContext;
 
-        Task AddAsync(TodoItem todoItem);
+        public TodoItemRepository(IAppDbContext appDbContext)
+        {
+            this.appDbContext = appDbContext;
+        }
 
-        void Remove(TodoItem todoItem);
+        public async Task AddAsync(TodoItem todoItem)
+        {
+            await appDbContext.TodoItems.AddAsync(todoItem);
+        }
 
-        void Update(TodoItem todoItem);
+        public async Task<TodoItem?> FindAsync(object id)
+        {
+            return await appDbContext.TodoItems.FindAsync(id);
+        }
 
-        Task<List<TodoItem>> ToListAsync();
+        public async Task FlushAsync()
+        {
+            await appDbContext.SaveChangesAsync();
+        }
 
-        Task<TodoItem?> FindAsync(object id);
-    }
+        public void Remove(TodoItem todoItem)
+        {
+            appDbContext.TodoItems.Remove(todoItem);
+        }
 
-    public class TodoItemRepository
-    {
+        public async Task<List<TodoItem>> ToListAsync()
+        {
+            return await appDbContext.TodoItems.ToListAsync();
+        }
+
+        public void Update(TodoItem todoItem)
+        {
+            appDbContext.TodoItems.Update(todoItem);
+        }
     }
 }
