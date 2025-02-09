@@ -1,14 +1,20 @@
-﻿namespace Todo;
+﻿using Todo.Views;
+
+namespace Todo;
 
 public partial class App : Application
 {
-	public App()
+	private readonly MainPage mainPage;
+
+	public App(MainPage mainPage)
 	{
-		InitializeComponent();
+		this.mainPage = mainPage;
+
+        InitializeComponent();
 	}
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new AppShell());
+		return new Window(mainPage);
 	}
 }
