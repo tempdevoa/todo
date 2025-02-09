@@ -10,14 +10,22 @@ namespace Todo.Models
 
         public bool IsCompleted { get; }
 
-        public bool CanBeCompleted => !IsCompleted;
-
         [JsonConstructor]
         public TodoItem(string id, string title, bool isCompleted)
         {
             Id = id;
             Title = title;
             IsCompleted = isCompleted;
+        }
+
+        public TodoItem Rename(string newTitle)
+        {
+            return new TodoItem(Id, newTitle, IsCompleted);
+        }
+
+        public TodoItem Complete()
+        {
+            return new TodoItem(Id, Title, true);
         }
     }
 }

@@ -9,8 +9,7 @@ namespace Todo.ViewModels
         private readonly ITodoItemService todoItemService;
         private string newToDoName = string.Empty;
         private string validationErrorMessage = string.Empty;
-        private bool hasValidationError = false;
-        
+                
         public string ValidationErrorMessage
         {
             get { return validationErrorMessage; }
@@ -48,7 +47,7 @@ namespace Todo.ViewModels
         public Command AddTodoCommand { get; }
 
         public Command DeleteTodoCommand { get; }
-
+                
         public Command CompleteTodoCommand { get; }
 
         public ObservableCollection<TodoItem> Todos { get; } = new ObservableCollection<TodoItem>();
@@ -91,6 +90,19 @@ namespace Todo.ViewModels
             IsBusy = false;
         }
 
+        public async Task RenameTodoAsync(string todoId, string newTitle)
+        {
+            IsBusy = true;
+            var foundTodo = Todos.FirstOrDefault(p => p.Id.Equals(todoId));
+            if (!string.IsNullOrEmpty(foundTodo.Id))
+            {
+                foundTodo = foundTodo.Rename(newTitle);
+                await todoItemService.UpdateAsync(foundTodo);
+                await LoadTodosAsync();
+            }
+            IsBusy = false;
+        }
+
         private async Task DeleteTodoAsync(string todoId)
         {
             IsBusy = true;
@@ -109,7 +121,8 @@ namespace Todo.ViewModels
             var foundTodo = Todos.FirstOrDefault(p => p.Id.Equals(todoId));
             if(!string.IsNullOrEmpty(foundTodo.Id))
             {
-                await todoItemService.CompleteAsync(foundTodo);
+                var completedTodo = foundTodo.Complete();
+                await todoItemService.UpdateAsync(completedTodo);
                 await LoadTodosAsync();
             }
             IsBusy = false;

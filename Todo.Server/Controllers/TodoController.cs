@@ -16,27 +16,27 @@ public class TodoController : ControllerBase
         todos.Add(new TodoItem("durchstich_implementieren", "Durchstich implementieren", false));
     }
 
-    [HttpGet(Name = "GetAllTodos")]
+    [HttpGet(Name = "GetAllTodoItems")]
     public IEnumerable<TodoItem> Get()
     {
         return todos;
     }
 
-    [HttpPost(Name = "AddTodo")]
+    [HttpPost(Name = "CreateTodoItem")]
     public TodoItem Add(TodoItem newTodoTask)
     {
         todos.Add(newTodoTask);
         return newTodoTask;
     }
 
-    [HttpPost("{id}", Name = "CompleteTodo")]
-    public void Complete(string id)
+    [HttpPost("{id}", Name = "UpdateTodoItem")]
+    public void Update(string id, TodoItem updatedTodoItem)
     {
         var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
-        foundTodo?.Complete();
+        foundTodo?.Adopt(updatedTodoItem);
     }
 
-    [HttpDelete("{id}", Name = "DeleteTodo")]
+    [HttpDelete("{id}", Name = "DeleteTodoItem")]
     public void Delete(string id)
     {
         var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));

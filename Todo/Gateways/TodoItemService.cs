@@ -60,11 +60,11 @@ namespace Todo.Gateways
             catch (Exception) { }
         }
 
-        public async Task CompleteAsync(TodoItem todo)
+        public async Task UpdateAsync(TodoItem todo)
         {
             try
             {
-                await httpClient.PostAsync($"{uri}/{todo.Id}", null);
+                await httpClient.PostAsJsonAsync($"{uri}/{todo.Id}", todo);
             }
             catch (Exception) { }
         }

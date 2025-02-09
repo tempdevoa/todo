@@ -7,8 +7,8 @@ namespace Todo.Gateways
         Task<List<TodoItem>> GetAllAsync();
 
         Task AddAsync(TodoItem todo);
-        
-        Task CompleteAsync(TodoItem todo);
+
+        Task UpdateAsync(TodoItem todo);
 
         Task DeleteAsync(TodoItem todo);
     }

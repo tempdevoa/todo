@@ -54,10 +54,25 @@
                                 </SwipeView.RightItems>
                                 <StackLayout Orientation="Horizontal" AutomationId="{Binding Id}">
                                     <CheckBox AutomationId="{Binding Path=Id, StringFormat='{0}checkbox'}" 
-                                              IsEnabled="{Binding IsCompleted, Converter={StaticResource InverseBooleanConverter}}}"
+                                              IsEnabled="{Binding IsCompleted, Converter={StaticResource InverseBooleanConverter}}"
                                               IsChecked="{Binding IsCompleted}" 
                                               CheckedChanged="OnCheckBoxCheckedChanged" />
-                                    <Label Text="{Binding Title}" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Title}" 
+                                           VerticalOptions="Center"
+                                           IsEnabled="{Binding IsCompleted, Converter={StaticResource InverseBooleanConverter}}"
+                                           AutomationId="{Binding Id, StringFormat='{0}titlelabel'}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnTitleLabelTapped"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Entry Text="{Binding Title}" 
+                                           x:Name="{Binding Id, StringFormat='{0}titleentry'}"
+                                           VerticalOptions="Center"
+                                           AutomationId="{Binding Id, StringFormat='{0}titleentry'}"
+                                           ReturnType="Done"
+                                           IsVisible="false"
+                                           Completed="OnTitleEntryCompleted"
+                                           Unfocused="OnTitleEntryFocusLost"/>
                                 </StackLayout>
                             </SwipeView>
                         </ViewCell>

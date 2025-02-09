@@ -1,10 +1,11 @@
-﻿namespace Todo.Server.Domain.TodoItemAggregate
+﻿
+namespace Todo.Server.Domain.TodoItemAggregate
 {
     public class TodoItem
     {
         public string Id { get; }
 
-        public string Title { get; }
+        public string Title { get; private set; }
               
         public bool IsCompleted { get; private set; }
 
@@ -15,9 +16,13 @@
             IsCompleted = isCompleted;
         }
 
-        public void Complete()
+        internal void Adopt(TodoItem updatedTodoItem)
         {
-            IsCompleted = true;
+            if (Id.Equals(updatedTodoItem.Id))
+            {
+                Title = updatedTodoItem.Title;
+                IsCompleted = updatedTodoItem.IsCompleted;
+            }
         }
     }
 }
