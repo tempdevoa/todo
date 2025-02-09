@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Todo.Server.Domain.TodoItemAggregate;
 using Todo.Server.Persistence;
 
@@ -15,30 +16,30 @@ public class TodoController : ControllerBase
         dbContext = appDbContext;
     }
 
-    [HttpGet(Name = "GetAllTodoItems")]
-    public IActionResult Get()
+    [HttpGet]
+    public async Task<IActionResult> GetAsync()
     {
-        return Ok(dbContext.TodoItems.ToList());
+        return Ok(await dbContext.TodoItems.ToListAsync());
     }
 
-    [HttpPost(Name = "CreateTodoItem")]
-    public IActionResult Add([FromBody] TodoItem newTodoTask)
+    [HttpPost]
+    public async Task<IActionResult> AddAsync(TodoItem newTodoTask)
     {
-        dbContext.TodoItems.Add(newTodoTask);
-        dbContext.SaveChanges();
+        await dbContext.TodoItems.AddAsync(newTodoTask);
+        await dbContext.SaveChangesAsync();
 
-        return Created(nameof(Get), newTodoTask);
+        return Created(nameof(GetAsync), newTodoTask);
     }
 
-    [HttpPut("{id}", Name = "UpdateTodoItem")]
-    public IActionResult Update(string id, [FromBody] TodoItem updatedTodoItem)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(string id, TodoItem updatedTodoItem)
     {
-        var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
+        var foundTodo = await dbContext.TodoItems.FindAsync(updatedTodoItem.Id);
         if(foundTodo != null)
         {
             foundTodo.Adopt(updatedTodoItem);
             dbContext.Update(foundTodo);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -48,14 +49,14 @@ public class TodoController : ControllerBase
         }            
     }
 
-    [HttpDelete("{id}", Name = "DeleteTodoItem")]
-    public IActionResult Delete(string id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(string id)
     {
-        var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
-        if(foundTodo != null)
+        var foundTodo = await dbContext.TodoItems.FindAsync(id);
+        if (foundTodo != null)
         {
             dbContext.TodoItems.Remove(foundTodo);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return NoContent();
         }
