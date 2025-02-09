@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Todo.Server.Domain.TodoItemAggregate;
+using Todo.Server.Persistence;
 
 namespace Todo.Server.Controllers;
 
@@ -7,42 +8,48 @@ namespace Todo.Server.Controllers;
 [Route("[controller]")]
 public class TodoController : ControllerBase
 {
-    private static readonly List<TodoItem> todos;
+    private readonly AppDbContext dbContext;
 
-    static TodoController()
+    public TodoController(AppDbContext appDbContext)
     {
-        todos = new List<TodoItem>();
-        todos.Add(new TodoItem("projekt_anlegen", "Projekt anlegen", true));
-        todos.Add(new TodoItem("durchstich_implementieren", "Durchstich implementieren", false));
+        dbContext = appDbContext;
     }
 
     [HttpGet(Name = "GetAllTodoItems")]
     public IEnumerable<TodoItem> Get()
     {
-        return todos;
+        return dbContext.TodoItems.ToList();
     }
 
-    [HttpPost(Name = "CreateTodoItem")]
-    public TodoItem Add(TodoItem newTodoTask)
+    [HttpPut(Name = "CreateTodoItem")]
+    public TodoItem Add([FromBody] TodoItem newTodoTask)
     {
-        todos.Add(newTodoTask);
+        dbContext.TodoItems.Add(newTodoTask);
+        dbContext.SaveChanges();
+
         return newTodoTask;
     }
 
     [HttpPost("{id}", Name = "UpdateTodoItem")]
-    public void Update(string id, TodoItem updatedTodoItem)
+    public void Update(string id, [FromBody] TodoItem updatedTodoItem)
     {
-        var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
-        foundTodo?.Adopt(updatedTodoItem);
+        var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
+        if(foundTodo != null)
+        {
+            foundTodo.Adopt(updatedTodoItem);
+            dbContext.Update(foundTodo);
+            dbContext.SaveChanges();
+        }
     }
 
     [HttpDelete("{id}", Name = "DeleteTodoItem")]
     public void Delete(string id)
     {
-        var foundTodo = todos.FirstOrDefault(p => p.Id.Equals(id));
+        var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
         if(foundTodo != null)
         {
-            todos.Remove(foundTodo);
+            dbContext.TodoItems.Remove(foundTodo);
+            dbContext.SaveChanges();
         }
     }
 }

@@ -3,11 +3,18 @@ namespace Todo.Server.Domain.TodoItemAggregate
 {
     public class TodoItem
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public string Title { get; private set; }
+        public string Title { get; set; }
               
-        public bool IsCompleted { get; private set; }
+        public bool IsCompleted { get; set; }
+
+        /// <summary>
+        /// Only for EF
+        /// </summary>
+        public TodoItem()
+        {
+        }
 
         public TodoItem(string id, string title, bool isCompleted)
         {
