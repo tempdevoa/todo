@@ -12,22 +12,21 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Ensure the database is seeded with initial data
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureDeleted();
-    db.Database.EnsureCreated();
-    db.TodoItems.AddRange(
-        new TodoItem("projekt_anlegen", "Projekt anlegen", true),
-        new TodoItem("durchstich_implementieren", "Durchstich implementieren", false)
-        );
-    db.SaveChanges();
-}
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
+        db.TodoItems.AddRange(
+            new TodoItem("projekt_anlegen", "Projekt anlegen", true),
+            new TodoItem("durchstich_implementieren", "Durchstich implementieren", false)
+            );
+        db.SaveChanges();
+    }
 }
 
 app.UseAuthorization();

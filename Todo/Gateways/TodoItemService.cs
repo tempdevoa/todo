@@ -46,7 +46,7 @@ namespace Todo.Gateways
         {
             try
             {
-                await httpClient.PutAsJsonAsync(uri, todo);
+                await httpClient.PostAsJsonAsync(uri, todo);
             }
             catch (Exception) { }
         }
@@ -64,7 +64,7 @@ namespace Todo.Gateways
         {
             try
             {
-                await httpClient.PostAsJsonAsync($"{uri}/{todo.Id}", todo);
+                await httpClient.PutAsJsonAsync($"{uri}/{todo.Id}", todo);
             }
             catch (Exception) { }
         }

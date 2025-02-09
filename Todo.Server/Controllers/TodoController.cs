@@ -16,22 +16,22 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllTodoItems")]
-    public IEnumerable<TodoItem> Get()
+    public IActionResult Get()
     {
-        return dbContext.TodoItems.ToList();
+        return Ok(dbContext.TodoItems.ToList());
     }
 
-    [HttpPut(Name = "CreateTodoItem")]
-    public TodoItem Add([FromBody] TodoItem newTodoTask)
+    [HttpPost(Name = "CreateTodoItem")]
+    public IActionResult Add([FromBody] TodoItem newTodoTask)
     {
         dbContext.TodoItems.Add(newTodoTask);
         dbContext.SaveChanges();
 
-        return newTodoTask;
+        return Created(nameof(Get), newTodoTask);
     }
 
-    [HttpPost("{id}", Name = "UpdateTodoItem")]
-    public void Update(string id, [FromBody] TodoItem updatedTodoItem)
+    [HttpPut("{id}", Name = "UpdateTodoItem")]
+    public IActionResult Update(string id, [FromBody] TodoItem updatedTodoItem)
     {
         var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
         if(foundTodo != null)
@@ -39,17 +39,29 @@ public class TodoController : ControllerBase
             foundTodo.Adopt(updatedTodoItem);
             dbContext.Update(foundTodo);
             dbContext.SaveChanges();
+
+            return Ok();
         }
+        else
+        {
+            return NotFound();
+        }            
     }
 
     [HttpDelete("{id}", Name = "DeleteTodoItem")]
-    public void Delete(string id)
+    public IActionResult Delete(string id)
     {
         var foundTodo = dbContext.TodoItems.FirstOrDefault(p => p.Id.Equals(id));
         if(foundTodo != null)
         {
             dbContext.TodoItems.Remove(foundTodo);
             dbContext.SaveChanges();
+
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
         }
     }
 }
