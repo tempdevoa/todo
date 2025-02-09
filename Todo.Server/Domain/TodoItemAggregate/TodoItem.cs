@@ -16,7 +16,7 @@ namespace Todo.Server.Domain.TodoItemAggregate
             IsCompleted = isCompleted;
         }
 
-        internal void Adopt(TodoItem updatedTodoItem)
+        public void Adopt(TodoItem updatedTodoItem)
         {
             if (Id.Equals(updatedTodoItem.Id))
             {
