@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -6,6 +7,7 @@ namespace Todo.Gateways
 {
     public class RestClient
     {
+        private readonly string restResource;
         private readonly HttpClient httpClient;
         private readonly Uri uri;
 
@@ -13,7 +15,8 @@ namespace Todo.Gateways
 
         public RestClient(string restResource)
         {
-            uri = new Uri($"http://192.168.199.1:5152/{restResource}");
+            this.restResource = restResource;
+            uri = new Uri($"http://192.168.199.1:5152/{this.restResource}");
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -43,23 +46,41 @@ namespace Todo.Gateways
             return queriedTodoTasks ?? new List<T>();
         }
 
-        public async Task<HttpResponseMessage> PostAsJsonAsync<TValue>(TValue value)
+        public async Task<ResponseStatus> PostAsJsonAsync<TValue>(TValue value)
         {
-            return await httpClient.PostAsJsonAsync(uri, value);
+            var response = await httpClient.PostAsJsonAsync(uri, value);
+            return ToResponseStatus(response.StatusCode);
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task<ResponseStatus> DeleteAsync(object id)
         {
-            await httpClient.DeleteAsync($"{uri}/{id}");
+            var response = await httpClient.DeleteAsync($"{uri}/{id}");
+            return ToResponseStatus(response.StatusCode);
         }
 
-        public async Task PutAsJsonAsync<TValue>(object id, TValue value)
+        public async Task<ResponseStatus> PutAsJsonAsync<TValue>(object id, TValue value)
         {
-            try
+            var response = await httpClient.PutAsJsonAsync($"{uri}/{id}", value);
+            return ToResponseStatus(response.StatusCode);
+        }
+
+        private ResponseStatus ToResponseStatus(HttpStatusCode httpStatusCode)
+        {
+            switch (httpStatusCode)
             {
-                await httpClient.PutAsJsonAsync($"{uri}/{id}", value);
+                case HttpStatusCode.OK:
+                    return new ResponseStatus.Ok();
+                case HttpStatusCode.Created:
+                    return new ResponseStatus.Ok();
+                case HttpStatusCode.NoContent:
+                    return new ResponseStatus.Ok();
+                case HttpStatusCode.Conflict:
+                    return new ResponseStatus.Duplicate(restResource);
+                case HttpStatusCode.NotFound:
+                    return new ResponseStatus.NotFound(restResource);
             }
-            catch (Exception) { }
+
+            return new ResponseStatus.Failed();
         }
     }
 }

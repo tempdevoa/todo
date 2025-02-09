@@ -84,9 +84,17 @@ namespace Todo.ViewModels
             IsBusy = true;
             var id = NewToDoName.Trim().ToLowerInvariant().Replace(" ", "_");
             var newTodo = new TodoItem(id, NewToDoName, false);
-            Todos.Add(newTodo);
-            NewToDoName = string.Empty;
-            await todoItemService.AddAsync(newTodo);
+            var responseStatus = await todoItemService.AddAsync(newTodo);
+            if (responseStatus.HasError)
+            {
+                ValidationErrorMessage = responseStatus.Error!;
+            }
+            else
+            {
+                Todos.Add(newTodo);
+                NewToDoName = string.Empty;
+            }
+            
             IsBusy = false;
         }
 
@@ -110,7 +118,11 @@ namespace Todo.ViewModels
             if (!string.IsNullOrEmpty(foundTodo.Id))
             {
                 Todos.Remove(foundTodo);
-                await todoItemService.DeleteAsync(foundTodo);
+                var responseStatus = await todoItemService.DeleteAsync(foundTodo);
+                if (responseStatus.HasError)
+                {
+                    ValidationErrorMessage = responseStatus.Error!;
+                }
             }
             IsBusy = false;
         }

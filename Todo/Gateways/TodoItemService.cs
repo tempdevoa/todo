@@ -17,31 +17,40 @@ namespace Todo.Gateways
             return await restClient.GetAllAsync<TodoItem>();
         }
 
-        public async Task AddAsync(TodoItem todo)
+        public async Task<ResponseStatus> AddAsync(TodoItem todo)
         {
             try
             {
-                await restClient.PostAsJsonAsync(todo);
+                return await restClient.PostAsJsonAsync(todo);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                return new ResponseStatus.Failed();
+            }
         }
 
-        public async Task DeleteAsync(TodoItem todo)
+        public async Task<ResponseStatus> DeleteAsync(TodoItem todo)
         {
             try
             {
-                await restClient.DeleteAsync(todo.Id);
+                return await restClient.DeleteAsync(todo.Id);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                return new ResponseStatus.Failed();
+            }
         }
 
-        public async Task UpdateAsync(TodoItem todo)
+        public async Task<ResponseStatus> UpdateAsync(TodoItem todo)
         {
             try
             {
-                await restClient.PutAsJsonAsync(todo.Id, todo);
+                return await restClient.PutAsJsonAsync(todo.Id, todo);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                return new ResponseStatus.Failed();
+            }
         }
     }
 }

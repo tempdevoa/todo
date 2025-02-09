@@ -6,10 +6,10 @@ namespace Todo.Gateways
     {
         Task<List<TodoItem>> GetAllAsync();
 
-        Task AddAsync(TodoItem todo);
+        Task<ResponseStatus> AddAsync(TodoItem todo);
 
-        Task UpdateAsync(TodoItem todo);
+        Task<ResponseStatus> UpdateAsync(TodoItem todo);
 
-        Task DeleteAsync(TodoItem todo);
+        Task<ResponseStatus> DeleteAsync(TodoItem todo);
     }
 }
