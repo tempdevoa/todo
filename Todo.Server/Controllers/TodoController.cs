@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Todo.Server.Domain.TodoItemAggregate;
 using Todo.Server.Persistence;
 
@@ -9,37 +8,52 @@ namespace Todo.Server.Controllers;
 [Route("[controller]")]
 public class TodoController : ControllerBase
 {
-    private readonly AppDbContext dbContext;
-
-    public TodoController(AppDbContext appDbContext)
+    private readonly ITodoItemRepository todoItemRepository;
+    
+    public TodoController(ITodoItemRepository todoItemRepository)
     {
-        dbContext = appDbContext;
+        this.todoItemRepository = todoItemRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
-        return Ok(await dbContext.TodoItems.ToListAsync());
+        return Ok(await todoItemRepository.ToListAsync());
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync(TodoItem newTodoTask)
+    public async Task<IActionResult> AddAsync(TodoItem? newTodoTask)
     {
-        await dbContext.TodoItems.AddAsync(newTodoTask);
-        await dbContext.SaveChangesAsync();
+        if(newTodoTask != null)
+        {
+            var alreadyExistingTodoItem = await todoItemRepository.FindAsync(newTodoTask.Id);
+            if(alreadyExistingTodoItem == null)
+            {
+                await todoItemRepository.AddAsync(newTodoTask);
+                await todoItemRepository.FlushAsync();
 
-        return Created(nameof(GetAsync), newTodoTask);
+                return Created(nameof(GetAsync), newTodoTask);
+            }
+            else
+            {
+                return Conflict();
+            }
+        }
+        else
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAsync(string id, TodoItem updatedTodoItem)
     {
-        var foundTodo = await dbContext.TodoItems.FindAsync(updatedTodoItem.Id);
+        var foundTodo = await todoItemRepository.FindAsync(updatedTodoItem.Id);
         if(foundTodo != null)
         {
             foundTodo.Adopt(updatedTodoItem);
-            dbContext.Update(foundTodo);
-            await dbContext.SaveChangesAsync();
+            todoItemRepository.Update(foundTodo);
+            await todoItemRepository.FlushAsync();
 
             return Ok();
         }
@@ -52,11 +66,11 @@ public class TodoController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(string id)
     {
-        var foundTodo = await dbContext.TodoItems.FindAsync(id);
+        var foundTodo = await todoItemRepository.FindAsync(id);
         if (foundTodo != null)
         {
-            dbContext.TodoItems.Remove(foundTodo);
-            await dbContext.SaveChangesAsync();
+            todoItemRepository.Remove(foundTodo);
+            await todoItemRepository.FlushAsync();
 
             return NoContent();
         }
